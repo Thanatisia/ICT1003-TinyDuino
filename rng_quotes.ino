@@ -40,91 +40,38 @@ void setup()
 
 void loop()
 {
-  //range of cases to choose from
+  //list of sentences to choose from, can add more
   int rando = 0;
-  rando = random(1, 11);
+  rando = random(0, 10); //set to no of elements in strings array
+  
+  const char *strings[] = {
+		"Got buy got hope",
+		"No buy no hope",
+		"50/50 win or lose", 
+		"4D 4 Lyfe",
+		"Next time will win",
+		"Get rich overnight",
+		"Gamble = Invest",
+		"$1 become $1m",
+		"Loser's quit",
+		"One win will do"
+	};
+	
   //Switch statement to select part of code to run based on button selection
   switch (display.getButtons()) 
   {
 
     //Run quotes function if lower left button detected
     case TSButtonLowerLeft:{
-      display.on();
-      display.setFont(liberationSans_8ptFontInfo);
+	  display.on();
+	  display.setFont(liberationSans_8ptFontInfo);
 
-      //rng for quotes      
-      switch(rando){
-        case 1:
-        display.setCursor(5,45);
-        display.print("Got buy got hope");
-        delay(1000);
-        display.clearScreen();
-        break;
-
-        case 2:
-        display.setCursor(5,45);
-        display.print("No buy no hope");
-        delay(1000);
-        display.clearScreen();
-        break;
-
-        case 3:
-        display.setCursor(5,45);
-        display.print("50/50 win or lose");
-        delay(1000);
-        display.clearScreen();
-        break;
-
-        case 4:
-        display.setCursor(5,45);
-        display.print("4D 4 Lyfe");
-        delay(1000);
-        display.clearScreen();
-        break;
-
-        case 5:
-        display.setCursor(5,45);
-        display.print("Next time will win");
-        delay(1000);
-        display.clearScreen();
-        break;
-
-        case 6:
-        display.setCursor(5,45);
-        display.print("Get rich overnight");
-        delay(1000);
-        display.clearScreen();
-        break;
-
-        case 7:
-        display.setCursor(5,45);
-        display.print("Gamble = Invest");
-        delay(1000);
-        display.clearScreen();
-        break;
-
-        case 8:
-        display.setCursor(5,45);
-        display.print("$1 become $1m");
-        delay(1000);
-        display.clearScreen();
-        break;
-
-        case 9:
-        display.setCursor(5,45);
-        display.print("Loser's quit");
-        delay(1000);
-        display.clearScreen();
-        break;
-
-        case 10:
-        display.setCursor(5,45);
-        display.print("One win will do");
-        delay(1000);
-        display.clearScreen();
-        break; 
-        
-      }
+	  display.setCursor(5,45);
+	  display.print(strings[rando]);
+	  delay(1000);
+	  display.clearScreen();
+	  break; 
+	  }
    break;
       
    }//run 4d number generator if bottom right button detected
