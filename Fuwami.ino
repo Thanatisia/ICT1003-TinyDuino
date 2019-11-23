@@ -165,23 +165,19 @@ void loop() {
 		while (millis() - endLoopTime < 25 - endLoopTime + startLoopTime) buttonLoop();
 	display.setY(0, SCREEN_HEIGHT-1);
 	display.setX(0, SCREEN_WIDTH-1);		
-	//display.clearScreen(); // clear the screen
 }
 
 // checks character state and decides on what animation to draw
 void characterAnim(){
 	if ((IS_IDLE || IS_TIRED) && STATE != 0 && !IS_RNG && !IS_SLEEP){ // this is to check the current state and whether it needs to clear the screen	
-		//display.clearWindow(CHARACTERXPOS, CHARACTERYPOS, SPRITE_BUNNY_XY[0], SPRITE_BUNNY_XY[1]);
 		STATE = 0;		
 		drawSprite(SPRITE_BUNNY_POKER, SPRITE_BUNNY_XY[0], SPRITE_BUNNY_XY[1], CHARACTERXPOS, CHARACTERYPOS);
 	}
 	else if (IS_HUNGRY && STATE !=1 && !IS_SLEEP){
-		//display.clearWindow(CHARACTERXPOS, CHARACTERYPOS, SPRITE_BUNNY_XY[0], SPRITE_BUNNY_XY[1]);
 		drawSprite(SPRITE_BUNNY_HUNGRY, SPRITE_BUNNY_XY[0], SPRITE_BUNNY_XY[1], CHARACTERXPOS, CHARACTERYPOS);
 		STATE = 1;
 	}
 	else if (IS_RNG && STATE != 2 && !IS_HUNGRY){
-		//display.clearWindow(CHARACTERXPOS, CHARACTERYPOS, SPRITE_BUNNY_XY[0], SPRITE_BUNNY_XY[1]);
 		drawSprite(SPRITE_BUNNY_BASE, SPRITE_BUNNY_XY[0], SPRITE_BUNNY_XY[1], CHARACTERXPOS, CHARACTERYPOS);
 		STATE = 2;
 	}
@@ -231,26 +227,21 @@ void updatePeriodStatus(uint16_t * STATUS_TICKER, const uint16_t * INTERVAL, boo
 void drawSprite(const uint8_t* SpritePtr, const uint8_t sizeX, const uint8_t sizeY, const uint8_t startX, const uint8_t startY){
 	uint8_t drawBuff[sizeX];
 	uint16_t pixel;
-	uint8_t pixel0;
-	uint8_t pixel1;
 	display.setX(startX, startX + sizeX-1);
 	display.setY(startY, startY + sizeY-1);	
 	display.startData();
 	for (uint8_t i=0; i< sizeY; i++){	
 		for (uint8_t z=0; z< sizeX;){
-			//pixel = pgm_read_byte_near(SpritePtr + z + (sizeX * i));
-			// use pgm_read_word rather than read_byte since both will take 1 execution cycle anyways to retrieve from flash.
+			// use pgm_read_word rather than read_byte since both will take 1 or 2 execution cycle anyways to retrieve from flash.
 			// by using word, will halve the amount of memory accesses, giving 2x speedup in drawing.
 			pixel = pgm_read_word_near(SpritePtr + z + (sizeX * i)); 
-			pixel0 = (uint8_t)(pixel >> 8); //casting to short same as bitmask, higher order bytes binary 11111111 00000000 = decimal 65280			
-			pixel1 = (uint8_t)(pixel);  //casting to short same as bitmask, lower order bytes binary 00000000 11111111 = decimal 255	
-			if (pixel0 != ALPHA){
-				drawBuff[z+1] = pixel0; 
+			if ((uint8_t)(pixel >> 8)!= ALPHA){ //casting to short same as bitmask, higher order bytes binary 11111111 00000000
+				drawBuff[z+1] = (uint8_t)(pixel >> 8); 
 			} else {
 				drawBuff[z+1] = BACKGROUND_COLOR_TOP;
 			}
-			if (pixel1 != ALPHA){
-				drawBuff[z] = pixel1;
+			if ((uint8_t)(pixel) != ALPHA){ //casting to short same as bitmask, lower order bytes binary 00000000 11111111 	
+				drawBuff[z] = (uint8_t)(pixel);
 			} else {
 				drawBuff[z] = BACKGROUND_COLOR_TOP;
 			}
